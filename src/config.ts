@@ -130,11 +130,11 @@ export const siteConfig: SiteConfig = {
   },
   sections: {
     about: true,
-    projects: true,
+    projects: false,
     blog: true,
     work: true,
     education: false,
-    hackathons: true,
+    hackathons: false,
     contact: true,
   },
 };
