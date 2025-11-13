@@ -1,6 +1,5 @@
 ---
-title: "About Me"
-photo: "https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Destiny&scale=90&backgroundColor=763900,9e5622,ecad80,f2d3b1,c0aede,b6e3f4"
+title: About Me
+photo: https://youke1.picui.cn/s1/2025/11/13/6915cb2cd572a.png
 ---
-
-I'm a full-stack developer with a passion for creating beautiful, functional, and user-friendly web applications. With experience in **modern frameworks and technologies**, I love turning ideas into reality through code. When I'm not coding, you can find me **exploring new technologies**, contributing to open source, or enjoying a good cup of coffee.
+My research as a graduate student focuses on **Large Language Models (LLMs)** and **Machine Translation**. Outside of my studies, I am an **ACMer**, keen on discussing and learning about competitive programming, as well as the technical aspects of LLMs, such as training, inference, and quantization. My professional background includes working at Huawei and TeleAI on operator development and multimodal LLMs (UI Agents). I encourage you to read my articles and reach out to me.
