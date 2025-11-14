@@ -103,7 +103,8 @@ export const siteConfig: SiteConfig = {
   email: "comistrymo@gmail.com",
   socialLinks: {
     github: "https://github.com/ComistryMo/",
-    bilibili: "https://space.bilibili.com/249617096"
+    bilibili: "https://space.bilibili.com/你的UID",
+    xiaohongshu: "https://www.xiaohongshu.com/user/你的ID",
   },
   enableThemeSelector: true,
   extraLinks: {
