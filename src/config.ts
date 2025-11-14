@@ -103,7 +103,7 @@ export const siteConfig: SiteConfig = {
   email: "comistrymo@gmail.com",
   socialLinks: {
     github: "https://github.com/ComistryMo/",
-    bilibili: "https://space.bilibili.com/你的UID",
+    bilibili: "https://space.bilibili.com/249617096",
     xiaohongshu: "https://www.xiaohongshu.com/user/你的ID",
   },
   enableThemeSelector: true,
@@ -111,22 +111,22 @@ export const siteConfig: SiteConfig = {
     enable: true,
     links: [
       {
-        link: "/blog/guides/bloomfolio-complete-guide",
-        icon: Flower2,
-        label: "Bloomfolio Guide",
-      },
-      {
-        link: "/blog/guides/content-collections-guide",
+        link: "/blog",
         icon: BookOpen,
-        label: "LLMs",
+        label: "Blog Guide",
       },
       {
-        link: "/blog/guides/markdown-guide",
+        link: "/blog/tags/essay",
+        icon: Flower2,
+        label: "essay",
+      },
+      {
+        link: "/blog/tags/llms",
         icon: FileText,
         label: "LLMs",
       },
       {
-        link: "https://github.com/lauroguedes/bloomfolio",
+        link: "/blog/tags/competitive-programming",
         icon: CodeXml,
         label: "Competitive Programming",
       },
