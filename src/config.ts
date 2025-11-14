@@ -19,6 +19,8 @@ export interface SocialLinks {
   instagram?: string;
   youTube?: string;
   codetips?: string;
+  bilibili?: string;
+  xiaohongshu?: string;
 }
 
 /**
@@ -101,6 +103,7 @@ export const siteConfig: SiteConfig = {
   email: "comistrymo@gmail.com",
   socialLinks: {
     github: "https://github.com/ComistryMo/",
+    bilibili: "https://space.bilibili.com/249617096"
   },
   enableThemeSelector: true,
   extraLinks: {
