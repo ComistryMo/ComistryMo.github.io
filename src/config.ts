@@ -118,17 +118,17 @@ export const siteConfig: SiteConfig = {
       {
         link: "/blog/guides/content-collections-guide",
         icon: BookOpen,
-        label: "Content Guide",
+        label: "LLMs",
       },
       {
         link: "/blog/guides/markdown-guide",
         icon: FileText,
-        label: "Markdown Guide",
+        label: "LLMs",
       },
       {
         link: "https://github.com/lauroguedes/bloomfolio",
         icon: CodeXml,
-        label: "GitHub Repo",
+        label: "Competitive Programming",
       },
     ],
   },
