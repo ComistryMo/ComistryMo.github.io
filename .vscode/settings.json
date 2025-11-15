@@ -1,0 +1,10 @@
+{
+  "pasteImage.path": "${currentFileDir}/images",
+  "pasteImage.basePath": "${currentFileDir}",
+  "pasteImage.forceUnixStyleSeparator": true,
+  "pasteImage.prefix": "./",
+  "pasteImage.defaultName": "YMMDDHHmmss",
+  "pasteImage.namePrefix": "img-",
+  "pasteImage.nameSuffix": "",
+  "pasteImage.insertPattern": "![图片](${imageFilePath}${imageSyntaxSuffix})"
+}
