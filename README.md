@@ -370,6 +370,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Icons from [Lucide](https://lucide.dev)
 - Inspired by modern portfolio designs and the developer community
 
+## 🤖 LLM/Quant 博客专区
+
+此项目已配置专属的 **LLM/Quant** 博客目录，支持封面图、内容图片和富媒体嵌入。
+
+**快速开始**：
+- 📄 [快速参考](./LLM-QUANT-QUICK-START.md) - 5分钟上手
+- 📖 [完整指南](./LLM-QUANT-BLOG-GUIDE.md) - 详细使用手册
+- 📋 [项目总结](./LLM-QUANT-PROJECT-SUMMARY.md) - 功能概览
+
+**文件位置**：
+- 模板文件：`src/content/blog/LLM/Quant/template.mdx`
+- 示例文章：`src/content/blog/LLM/Quant/getting-started.mdx`
+- 图片目录：`src/content/blog/LLM/Quant/images/`
+
 ## 💬 Support
 
 - 📖 [Documentation](https://bloomfolio-astro.vercel.app/blog/guides/bloomfolio-complete-guide)
@@ -380,3 +394,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Please if you find this project helpful, consider giving it a ⭐ on GitHub!
 
 Crafted by an Artisan ⛏️ [Lauro Guedes](https://lauroguedes.dev)
+
+Customized by ComistryMo with LLM/Quant Blog System

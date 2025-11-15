@@ -1,0 +1,11 @@
+# 将你的图片文件放在这里
+
+推荐的图片命名方式：
+- 封面图：文章名-cover.png（如：trading-strategy-cover.png）
+- 内容图：文章名-fig1.png, 文章名-fig2.png
+
+示例：
+- getting-started-cover.png
+- getting-started-fig1.png
+- trading-strategy-cover.png
+- trading-strategy-result-1.png

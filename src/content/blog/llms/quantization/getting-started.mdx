@@ -1,0 +1,230 @@
+---
+title: "开始在 LLM/Quant 目录写博客"
+description: "这是一篇示例文章，展示如何在 LLM/Quant 子目录中创建和管理博客文章"
+image: "../../blog_post.jpg"
+publishDate: "2025-11-15"
+tags: ["教程", "LLM", "Quant", "入门"]
+---
+
+# 欢迎来到 LLM/Quant 博客专区！
+
+这是一篇示例文章，帮助你快速上手在这个目录下写博客。
+
+## 🎯 这个目录的用途
+
+`LLM/Quant` 目录专门用于发布**大语言模型**与**量化交易**相关的技术博客文章。
+
+### 适合发布的内容
+
+- 🤖 大语言模型在量化交易中的应用
+- 📊 量化策略开发与回测
+- 🔬 算法交易研究
+- 💡 机器学习在金融领域的实践
+- 📈 市场分析与预测模型
+- 🛠️ 工具和框架使用教程
+
+## 📝 快速开始指南
+
+### 第一步：创建文章
+
+1. 在当前目录下新建 `.mdx` 文件
+2. 使用 `template.mdx` 作为起点
+3. 修改文章元信息（frontmatter）
+
+### 第二步：添加封面图
+
+有两种方式：
+
+#### 方式一：使用本地图片（推荐）
+
+```yaml
+---
+image: "./images/my-cover.png"
+---
+```
+
+将封面图放在 `images/` 文件夹中，使用相对路径引用。
+
+#### 方式二：使用 public 目录
+
+```yaml
+---
+image: "/images/blog/LLM/Quant/my-cover.png"
+---
+```
+
+将图片放在 `public/images/blog/LLM/Quant/` 目录。
+
+### 第三步：编写内容
+
+支持完整的 Markdown 和 MDX 语法！
+
+## 🎨 内容示例
+
+### 插入图片
+
+如果你有本地图片，可以这样引用：
+
+```markdown
+![图片描述](./images/figure1.png)
+```
+
+暂时没有图片？可以先使用项目中已有的占位图：
+
+```markdown
+![占位图](../../placeholder-blog.png)
+```
+
+### 代码高亮
+
+```python
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+
+# 量化策略示例
+def calculate_signals(data):
+    """计算交易信号"""
+    data['returns'] = data['close'].pct_change()
+    data['signal'] = np.where(data['returns'] > 0, 1, -1)
+    return data
+
+# 加载数据
+df = pd.read_csv('market_data.csv')
+df_with_signals = calculate_signals(df)
+```
+
+### 表格
+
+| 策略名称 | 年化收益 | 最大回撤 | 夏普比率 |
+|---------|---------|---------|----------|
+| 策略A   | 15.2%   | -12.3%  | 1.23     |
+| 策略B   | 12.8%   | -8.5%   | 1.51     |
+| 策略C   | 18.5%   | -15.2%  | 1.22     |
+
+### 引用
+
+> "在量化交易中，最重要的不是找到完美的策略，而是建立完善的风险管理体系。"
+> — 量化交易实践
+
+## 🔬 高级功能
+
+### 数学公式（需要配置插件）
+
+如果需要数学公式支持，需要安装 `remark-math` 和 `rehype-katex` 插件。
+
+配置后可以使用：
+- 行内公式：收益率 R = (Pt - Pt-1) / Pt-1
+- 块级公式：Sharpe Ratio = E[Rp - Rf] / σp
+
+其中：
+- Rp 是投资组合收益率
+- Rf 是无风险利率  
+- σp 是投资组合收益率的标准差
+
+### 嵌入外部内容
+
+#### YouTube 视频
+```jsx
+import YouTube from '../../../components/YouTube.astro';
+
+<YouTube id="your-video-id" />
+```
+
+#### Twitter/X 帖子
+```jsx
+import Twitter from '../../../components/Twitter.astro';
+
+<Twitter url="https://x.com/username/status/..." />
+```
+
+## 📚 推荐资源
+
+### 学习资源
+- [QuantConnect](https://www.quantconnect.com/) - 量化交易平台
+- [Hugging Face](https://huggingface.co/) - LLM模型库
+- [Kaggle](https://www.kaggle.com/) - 数据科学竞赛
+
+### 开源项目
+- [Backtrader](https://www.backtrader.com/) - Python回测框架
+- [PyTorch](https://pytorch.org/) - 深度学习框架
+- [Transformers](https://huggingface.co/transformers/) - LLM工具库
+
+## 💡 写作建议
+
+### 结构建议
+1. **引言**：简要介绍主题和背景
+2. **核心内容**：详细展开论述（可分多个章节）
+3. **代码示例**：提供可运行的完整代码
+4. **实验结果**：展示数据和图表
+5. **总结**：归纳要点和展望
+
+### 内容建议
+- ✅ 使用清晰的标题层级
+- ✅ 图文并茂，配上合适的图表
+- ✅ 代码注释充分，易于理解
+- ✅ 引用可靠的数据来源
+- ✅ 分享实际经验和踩坑记录
+
+### SEO建议
+- 标题包含核心关键词
+- 描述简洁有力，吸引点击
+- 使用相关的标签
+- 适当添加内外链接
+
+## 🚀 发布流程
+
+### 1. 本地预览
+```bash
+npm run dev
+```
+
+访问 `http://localhost:4321/blog/llm/quant/getting-started` 查看效果。
+
+### 2. 检查清单
+- [ ] 标题和描述准确无误
+- [ ] 封面图正确显示
+- [ ] 所有图片都能加载
+- [ ] 代码高亮正常
+- [ ] 标签设置合理
+- [ ] 日期格式正确
+- [ ] 移动端显示正常
+
+### 3. 构建和部署
+```bash
+# 构建生产版本
+npm run build
+
+# 预览生产版本
+npm run preview
+
+# 推送到仓库（如果配置了自动部署）
+git add .
+git commit -m "Add new blog post: getting-started"
+git push
+```
+
+## 📖 更多帮助
+
+遇到问题？查看这些资源：
+
+1. **README.md** - 当前目录下的完整使用指南
+2. **template.mdx** - 文章模板文件
+3. [Astro文档](https://docs.astro.build) - 官方文档
+4. [MDX文档](https://mdxjs.com/) - MDX语法参考
+
+## 🎉 开始创作吧！
+
+现在你已经了解了基本用法，可以开始创作自己的博客了！
+
+**记住**：
+- 保持内容质量
+- 定期更新
+- 与读者互动
+- 持续学习和改进
+
+祝你写作愉快！✨
+
+---
+
+**提示**：这篇文章使用了项目现有的占位图作为封面，你可以替换成自己的图片。查看 `README.md` 了解如何管理图片。
