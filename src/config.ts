@@ -36,6 +36,7 @@ export interface SectionsConfig {
 export interface SiteConfig {
   name: string;
   title: string;
+  titles?: string[]; // 新增：标题列表（随机展示）
   description?: string;
   avatar?: string;
   location: string;
@@ -49,6 +50,18 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   name: "ComistryMo",
   title: "身在高处便是靶，我只引弓对苍穹",
+  titles: [
+    "身在高处便是靶，我只引弓对苍穹",
+    "前路尽是坎坷，踏平便成坦途",
+    "昔日蹉跎何须悔，今朝踉跄亦是前",
+    "愁如寒风泼上身",
+    "满堂花醉三千客，一剑霜寒十四州",
+    "春色浮寒瓮",
+    "早知不入时人眼，多买胭脂画牡丹",
+    "打窗风雨正三更",
+    "一去紫台连朔漠，独留青冢向黄昏",
+    "一笑出门去，千里落花风",
+  ],
   location: "China",
   email: "comistrymo@gmail.com",
   socialLinks: {
