@@ -96,13 +96,10 @@ function resolveImageUrl(img: unknown) {
         )}
       </div>
 
-      <!-- Views & Likes -->
+      <!-- Views -->
       <div id="blog-counters" data-id={id ?? ""} class="mt-2">
         <div class="flex items-center gap-4 text-sm text-base-content/60">
           <span>Views: <span id="views-count">—</span></span>
-          <span>•</span>
-          <button id="like-btn" class="btn btn-xs btn-outline">Like</button>
-          <span id="likes-count" class="ml-1">—</span>
         </div>
       </div>
 
@@ -160,64 +157,26 @@ function resolveImageUrl(img: unknown) {
       const NS = 'comistrymo_blog';
       const BASE = 'https://api.countapi.xyz';
 
-      // 统一文章唯一键
+      // 统一文章唯一键：优先 data-id，其次去掉 blog/ 前缀的路径
       const rawDataId = container.getAttribute('data-id') || '';
       const pathId = location.pathname.replace(/^\/+|\/+$/g, '');
       const normalizedPathId = pathId.replace(/^blog\//, '');
       const articleId = rawDataId || normalizedPathId;
 
+      // 仅保留浏览量
       const viewKey = `views:${articleId}`;
-      const likeKey = `likes:${articleId}`;
-
       const viewsSpan = document.getElementById('views-count');
-      const likesSpan = document.getElementById('likes-count');
-      const likeBtn = document.getElementById('like-btn');
 
-      const setLikedUI = () => {
-        if (!likeBtn) return;
-        likeBtn.setAttribute('disabled', 'true');
-        likeBtn.classList.add('btn-disabled');
-        likeBtn.textContent = 'Liked';
-      };
-      const setUnlikedUI = () => {
-        if (!likeBtn) return;
-        likeBtn.removeAttribute('disabled');
-        likeBtn.classList.remove('btn-disabled');
-        likeBtn.textContent = 'Like';
-      };
-
-      // 初始显示
+      // 初始显示为 0
       if (viewsSpan) viewsSpan.textContent = '0';
-      if (likesSpan) likesSpan.textContent = '0';
-      setUnlikedUI();
 
-      // 本地键（去重，只声明一次）
+      // 本地浏览量：乐观递增并显示
       const localViewsKey = `local_views:${articleId}`;
-      const localLikedKey = `liked:${articleId}`;
-
-      // 迁移旧键到统一键（防止历史点赞丢失）
-      (() => {
-        if (!localStorage.getItem(localLikedKey)) {
-          const candidates = [
-            `liked:${pathId}`,            // 包含 blog/ 前缀
-            `liked:${normalizedPathId}`,  // 去掉 blog/ 前缀
-          ];
-          for (const k of candidates) {
-            if (localStorage.getItem(k)) {
-              localStorage.setItem(localLikedKey, '1');
-              localStorage.removeItem(k);
-              break;
-            }
-          }
-        }
-      })();
-
-      // 乐观本地浏览量
       const localViews = Number(localStorage.getItem(localViewsKey) || 0) + 1;
       localStorage.setItem(localViewsKey, String(localViews));
       if (viewsSpan) viewsSpan.textContent = String(localViews);
 
-      // 安全 fetch（带 3s 超时）
+      // 安全 fetch（3s 超时）
       const safeFetch = async (url, opts = {}) => {
         const controller = new AbortController();
         const t = setTimeout(() => controller.abort(), 3000);
@@ -231,55 +190,29 @@ function resolveImageUrl(img: unknown) {
         }
       };
 
-      const create = async (key) => { await safeFetch(`${BASE}/create?namespace=${encodeURIComponent(NS)}&key=${encodeURIComponent(key)}&value=0`); };
-      const get = async (key) => {
-        const r = await safeFetch(`${BASE}/get/${encodeURIComponent(NS)}/${encodeURIComponent(key)}`);
-        if (!r) return undefined;
-        try { const d = await r.json(); return typeof d.value === 'number' ? d.value : undefined; } catch { return undefined; }
+      const create = async (key) => {
+        await safeFetch(`${BASE}/create?namespace=${encodeURIComponent(NS)}&key=${encodeURIComponent(key)}&value=0`);
       };
       const hit = async (key) => {
         const r = await safeFetch(`${BASE}/hit/${encodeURIComponent(NS)}/${encodeURIComponent(key)}`);
         if (!r) return undefined;
-        try { const d = await r.json(); return typeof d.value === 'number' ? d.value : undefined; } catch { return undefined; }
+        try {
+          const d = await r.json();
+          return typeof d.value === 'number' ? d.value : undefined;
+        } catch { return undefined; }
       };
 
-      // 远端浏览量（成功则覆盖）
+      // 远端浏览量：成功则覆盖本地显示
       (async () => {
         await create(viewKey);
         const v = await hit(viewKey);
-        if (typeof v === 'number' && viewsSpan) viewsSpan.textContent = String(v);
-      })();
-
-      // 点赞初始化（远端与本地合并）
-      (async () => {
-        await create(likeKey);
-        const remoteLikes = await get(likeKey);
-        const alreadyLiked = !!localStorage.getItem(localLikedKey);
-        const localLikesFallback = alreadyLiked ? 1 : 0;
-        if (likesSpan) {
-          const merged = remoteLikes !== undefined ? Math.max(remoteLikes, localLikesFallback) : localLikesFallback;
-          likesSpan.textContent = String(merged);
+        if (typeof v === 'number' && viewsSpan) {
+          viewsSpan.textContent = String(v);
         }
-        if (alreadyLiked) setLikedUI();
-        else setUnlikedUI();
-
-        likeBtn?.addEventListener('click', async () => {
-          if (localStorage.getItem(localLikedKey)) { setLikedUI(); return; }
-
-          // 乐观更新
-          const current = Number(likesSpan?.textContent || 0);
-          const optimistic = current + 1;
-          if (likesSpan) likesSpan.textContent = String(optimistic);
-          setLikedUI();
-          localStorage.setItem(localLikedKey, '1');
-
-          // 远端同步（成功则覆盖显示）
-          const nv = await hit(likeKey);
-          if (typeof nv === 'number' && likesSpan) likesSpan.textContent = String(nv);
-        });
       })();
     }
 
+    // 就绪判断
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init, { once: true });
     } else {
