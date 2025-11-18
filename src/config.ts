@@ -29,7 +29,7 @@ export interface SectionsConfig {
   blog: boolean;
   work: boolean;
   education: boolean;
-  hackathons: boolean;
+  competitions: boolean;
   contact: boolean;
 }
 
@@ -101,7 +101,7 @@ export const siteConfig: SiteConfig = {
     blog: true,
     work: true,
     education: false,
-    hackathons: false,
+    competitions: true,
     contact: false,
   },
 };

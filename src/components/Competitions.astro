@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+
+const competitionEntries = await getCollection("competitions");
+
+// Sort by start date, most recent first
+const sortedCompetitions = competitionEntries.sort(
+  (a, b) => b.data.startDate.getTime() - a.data.startDate.getTime()
+);
+
+function formatPeriod(startDate: Date, endDate?: Date) {
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    year: "numeric",
+  };
+  const start = startDate.toLocaleDateString("en-US", options);
+
+  if (endDate && endDate.getTime() !== startDate.getTime()) {
+    const end = endDate.toLocaleDateString("en-US", options);
+    return `${start} - ${end}`;
+  }
+
+  return start;
+}
+---
+
+<section id="competitions" class="py-20 px-4 bg-base-200">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-4">Competitions</h2>
+      <p class="text-lg text-base-content/70">
+        Achievements in ACM-ICPC and other programming contests.
+      </p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {
+        sortedCompetitions.map((competition) => (
+          <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+            <div class="card-body">
+              <div class="flex items-start gap-4">
+                {competition.data.logo && (
+                  <div class="avatar flex-shrink-0">
+                    <div class="w-12 h-12 rounded">
+                      <img
+                        src={competition.data.logo}
+                        alt={competition.data.title}
+                      />
+                    </div>
+                  </div>
+                )}
+                <div class="flex-1 min-w-0">
+                  <time class="text-xs text-base-content/60">
+                    {formatPeriod(
+                      competition.data.startDate,
+                      competition.data.endDate
+                    )}
+                  </time>
+                  <h3 class="card-title text-base mt-1 leading-tight">
+                    {competition.data.title}
+                  </h3>
+                  <p class="text-xs text-base-content/70 mt-1">
+                    {competition.data.location}
+                  </p>
+                  <div class="badge badge-primary badge-sm mt-3">
+                    {competition.data.award}
+                  </div>
+                  {competition.data.description && (
+                    <p class="text-sm text-base-content/80 mt-3">
+                      {competition.data.description}
+                    </p>
+                  )}
+                  {competition.data.sourceLink && (
+                    <div class="card-actions mt-4">
+                      <a
+                        href={competition.data.sourceLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn btn-xs btn-outline btn-primary"
+                      >
+                        View Details
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
