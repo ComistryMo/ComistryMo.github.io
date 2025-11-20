@@ -14,6 +14,7 @@
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^5.15.2",
     "daisyui": "^5.3.10",
-    "tailwindcss": "^4.1.16"
+    "tailwindcss": "^4.1.16",
+    "unist-util-visit": "^5.0.0"
   }
 }
