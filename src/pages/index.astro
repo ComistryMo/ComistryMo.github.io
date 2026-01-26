@@ -5,7 +5,7 @@ import About from "../components/About.astro";
 import Timeline from "../components/Timeline.astro";
 import Projects from "../components/Projects.astro";
 import Blog from "../components/Blog.astro";
-import Hackathons from "../components/Hackathons.astro";
+import Competitions from "../components/Competitions.astro";
 import Contact from "../components/Contact.astro";
 import { Briefcase, GraduationCap } from "@lucide/astro";
 import { getEntry, render } from "astro:content";
@@ -26,6 +26,7 @@ const { Content: AboutContent } = await render(aboutEntry);
     <Hero
       name={siteConfig.name}
       title={siteConfig.title}
+      titles={siteConfig.titles}
       description={siteConfig.description}
       avatar={bloomfolioLogo}
       location={siteConfig.location}
@@ -76,8 +77,8 @@ const { Content: AboutContent } = await render(aboutEntry);
       )
     }
 
-    <!-- Hackathons Section -->
-    {siteConfig.sections.hackathons && <Hackathons />}
+    <!-- Competitions Section -->
+    {siteConfig.sections.competitions && <Competitions />}
 
     <!-- Contact Section -->
     {siteConfig.sections.contact && <Contact />}

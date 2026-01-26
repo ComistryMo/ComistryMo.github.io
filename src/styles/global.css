@@ -2,3 +2,39 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, synthwave, retro, valentine, dim;
 };
+
+/* Custom styles for Timeline work experience */
+.prose-work {
+  /* Opening paragraph */
+  & > p:first-of-type {
+    @apply text-base leading-relaxed mb-6 text-base-content/90;
+  }
+
+  /* Bullet list styling */
+  & > ul {
+    @apply space-y-4 my-6;
+  }
+
+  & > ul > li {
+    @apply leading-relaxed text-base-content/80;
+  }
+
+  /* Bold text (achievements) */
+  & strong {
+    @apply text-primary font-semibold;
+  }
+
+  /* Technology stack (italic text) */
+  & > p:last-of-type em {
+    @apply not-italic text-sm text-base-content/60 tracking-wide;
+  }
+
+  /* Remove default prose margins */
+  & > *:first-child {
+    @apply mt-0;
+  }
+
+  & > *:last-child {
+    @apply mb-0;
+  }
+}

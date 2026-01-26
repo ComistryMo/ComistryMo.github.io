@@ -1,0 +1,26 @@
+---
+title: KV Cache实现与详解(基于Qwen3-0.6B)
+description: 基于之前实现的Qwen3-0.6B，进一步优化性能，添加KV Cache机制
+image: ../../blog_post.jpg
+publishDate: 2025-11-24
+tags:
+  - LLM
+  - Inference
+  - KV-Cache
+---
+
+# KV Cache实现与详解(基于Qwen3-0.6B)
+
+## 简介
+
+在[上一篇博客](https://comistrymo.github.io/blog/llms/inference/qwen3-06b-inference/)的基础上，本文将实现KV Cache，来进一步提高性能。阅读之前的博客可以发现，有无KV Cache对性能影响很大， 因此我将先介绍KV Cache的原理，然后再进行手写KV Cache并解析。
+
+## 主要内容
+
+### KV Cache的原理
+从token的角度来看，假设当前生成第$N$个token，那么我们需要将前$N-1$个token作为输入，进行注意力机制的计算，当生成到第$N+1$个token的时候，我们需要将前$N$个token作为输入，进行注意力机制的计算。
+在注意力机制计算中，我们会计算$QKV$三个矩阵并进行矩阵乘法等操作，当我们在以前$N$个token作为输入计算$KV$矩阵时，可以看到$KV$矩阵的前$N-1$部分与以前$N-1$个token作为输入计算的$KV$矩阵是一致的，也就是前序序列的参数是固定的，它们产生的 $K$ 和 $V$ 矩阵实际上是恒定不变的。这种重复计算构成了巨大的资源浪费。
+KV Cache 的核心思想便是“空间换时间”。我们在显存中开辟一块空间，用于存储过去所有 token 计算出的 $K$ 和 $V$ 矩阵。当生成新 token 时，我们不再重新处理整个历史序列，而仅仅将新 token 输入模型，计算它自己的 $Q_{new}, K_{new}, V_{new}$。随后，我们将这个 $K_{new}$ 和 $V_{new}$ 拼接到缓存中的 $K_{cache}$ 和 $V_{cache}$ 尾部。
+通过这种方式，原本随序列长度呈平方增长 $O(N^2)$ 的注意力计算量，被降低到了线性增长 $O(N)$。这解释了为何在长文本生成中，KV Cache 能带来如此显著的加速。
+### 代码实现
+

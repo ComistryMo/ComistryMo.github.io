@@ -6,6 +6,7 @@ import type { SocialLinks } from "../config";
 interface Props {
   name: string;
   title: string;
+  titles?: string[]; // 新增：可选标题列表
   description: string;
   avatar: any;
   location?: string;
@@ -22,7 +23,7 @@ interface Props {
   };
 }
 
-const { name, title, description, avatar, location, socialLinks } = Astro.props;
+const { name, title, titles, description, avatar, location, socialLinks } = Astro.props;
 ---
 
 <section class="hero min-h-screen">
@@ -38,7 +39,13 @@ const { name, title, description, avatar, location, socialLinks } = Astro.props;
       <h1 class="text-5xl font-bold mb-4">
         Hi, I'm {name}
       </h1>
-      <p class="text-xl text-base-content/80 mb-2">{title}</p>
+      <p
+        id="hero-title"
+        data-titles={JSON.stringify(titles ?? [])}
+        class="text-xl text-base-content/80 mb-2"
+      >
+        {title}
+      </p>
       {location && <p class="text-base-content/60 mb-4">{location}</p>}
       <p class="text-lg leading-relaxed mb-6">
         {description}
@@ -193,3 +200,20 @@ const { name, title, description, avatar, location, socialLinks } = Astro.props;
     </div>
   </div>
 </section>
+
+<script>
+  (() => {
+    const el = document.getElementById('hero-title');
+    if (!el) return;
+    const raw = el.getAttribute('data-titles');
+    try {
+      const list = raw ? JSON.parse(raw) : [];
+      if (Array.isArray(list) && list.length) {
+        const i = Math.floor(Math.random() * list.length);
+        el.textContent = list[i];
+      }
+    } catch {
+      // 忽略解析错误，回退到原始 title
+    }
+  })();
+</script>

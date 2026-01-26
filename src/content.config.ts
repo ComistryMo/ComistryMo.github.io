@@ -42,13 +42,14 @@ const projects = defineCollection({
   }),
 });
 
-// Hackathons collection
-const hackathons = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/hackathons" }),
+// Competitions collection
+const competitions = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/competitions" }),
   schema: z.object({
     title: z.string(),
     location: z.string(),
-    description: z.string(),
+    award: z.string(),
+    description: z.string().optional(),
     startDate: z.coerce.date(),
     endDate: z.coerce.date().optional(),
     logo: z.string().optional(),
@@ -82,7 +83,7 @@ export const collections = {
   work,
   education,
   projects,
-  hackathons,
+  competitions,
   blog,
   about,
 };

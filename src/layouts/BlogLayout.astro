@@ -10,9 +10,10 @@ interface Props {
   updatedDate?: Date;
   image: any;
   tags?: string[];
+  id?: string;
 }
 
-const { title, description, publishDate, updatedDate, image, tags } = Astro.props;
+const { title, description, publishDate, updatedDate, image, tags, id } = Astro.props;
 
 function formatDate(date: Date) {
   return date.toLocaleDateString('en-US', {
@@ -26,8 +27,16 @@ function formatDate(date: Date) {
 const content = await Astro.slots.render('default');
 const wordCount = content.split(/\s+/).length;
 const readingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 words/min
----
 
+function resolveImageUrl(img: unknown) {
+  if (typeof img === 'string') {
+    if (img.startsWith('http://') || img.startsWith('https://')) return img;
+    if (img.startsWith('/')) return img; // public/ 下的资源
+    return '/images/og_home.png'; // 防御：相对 src/ 的字符串不直接用
+  }
+  return null;
+}
+---
 <Layout title={title} description={description}>
   <article class="max-w-4xl mx-auto px-4 py-20">
     <!-- Back button -->
@@ -43,13 +52,28 @@ const readingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 wo
     <!-- Featured Image -->
     {image && (
       <figure class="mb-8 rounded-2xl overflow-hidden">
-        <Image
-          src={image}
-          alt={title}
-          class="w-full aspect-video object-cover"
-          width={1200}
-          height={630}
-        />
+        {
+          typeof image === "string"
+            ? (
+              <img
+                src={resolveImageUrl(image)}
+                alt={title}
+                class="w-full aspect-video object-cover"
+                width="1200"
+                height="630"
+                loading="lazy"
+              />
+            )
+            : (
+              <Image
+                src={image}
+                alt={title}
+                class="w-full aspect-video object-cover"
+                width={1200}
+                height={630}
+              />
+            )
+        }
       </figure>
     )}
 
@@ -70,6 +94,13 @@ const readingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 wo
             <span>Updated: {formatDate(updatedDate)}</span>
           </>
         )}
+      </div>
+
+      <!-- Views -->
+      <div id="blog-counters" data-id={id ?? ""} class="mt-2">
+        <div class="flex items-center gap-4 text-sm text-base-content/60">
+          <span>Views: <span id="views-count">—</span></span>
+        </div>
       </div>
 
       {tags && tags.length > 0 && (
@@ -116,3 +147,76 @@ const readingTime = Math.ceil(wordCount / 200); // Average reading speed: 200 wo
     </div>
   </article>
 </Layout>
+
+<script>
+  (() => {
+    function init() {
+      const container = document.getElementById('blog-counters');
+      if (!container) return;
+
+      const NS = 'comistrymo_blog';
+      const BASE = 'https://api.countapi.xyz';
+
+      // 统一文章唯一键：优先 data-id，其次去掉 blog/ 前缀的路径
+      const rawDataId = container.getAttribute('data-id') || '';
+      const pathId = location.pathname.replace(/^\/+|\/+$/g, '');
+      const normalizedPathId = pathId.replace(/^blog\//, '');
+      const articleId = rawDataId || normalizedPathId;
+
+      // 仅保留浏览量
+      const viewKey = `views:${articleId}`;
+      const viewsSpan = document.getElementById('views-count');
+
+      // 初始显示为 0
+      if (viewsSpan) viewsSpan.textContent = '0';
+
+      // 本地浏览量：乐观递增并显示
+      const localViewsKey = `local_views:${articleId}`;
+      const localViews = Number(localStorage.getItem(localViewsKey) || 0) + 1;
+      localStorage.setItem(localViewsKey, String(localViews));
+      if (viewsSpan) viewsSpan.textContent = String(localViews);
+
+      // 安全 fetch（3s 超时）
+      const safeFetch = async (url, opts = {}) => {
+        const controller = new AbortController();
+        const t = setTimeout(() => controller.abort(), 3000);
+        try {
+          const res = await fetch(url, { ...opts, signal: controller.signal, mode: 'cors', cache: 'no-store', referrerPolicy: 'no-referrer' });
+          clearTimeout(t);
+          return res;
+        } catch {
+          clearTimeout(t);
+          return undefined;
+        }
+      };
+
+      const create = async (key) => {
+        await safeFetch(`${BASE}/create?namespace=${encodeURIComponent(NS)}&key=${encodeURIComponent(key)}&value=0`);
+      };
+      const hit = async (key) => {
+        const r = await safeFetch(`${BASE}/hit/${encodeURIComponent(NS)}/${encodeURIComponent(key)}`);
+        if (!r) return undefined;
+        try {
+          const d = await r.json();
+          return typeof d.value === 'number' ? d.value : undefined;
+        } catch { return undefined; }
+      };
+
+      // 远端浏览量：成功则覆盖本地显示
+      (async () => {
+        await create(viewKey);
+        const v = await hit(viewKey);
+        if (typeof v === 'number' && viewsSpan) {
+          viewsSpan.textContent = String(v);
+        }
+      })();
+    }
+
+    // 就绪判断
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>
